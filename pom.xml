@@ -46,9 +46,11 @@
 			<plugin>
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
-				<version>6.1.1</version>
+				<version>12.1.0</version>
 				<configuration>
 					<failBuildOnCVSS>8</failBuildOnCVSS>
+					<!-- Supply your NVD API key via -DnvdApiKey=YOUR_KEY or as a Jenkins credential -->
+					<nvdApiKey>${nvdApiKey}</nvdApiKey>
 				</configuration>
 				<executions>
 					<execution>

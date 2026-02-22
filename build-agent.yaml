@@ -7,6 +7,14 @@ spec:
   volumes:
   - name: workspace-volume
     emptyDir: {}
+  - name: jenkins-docker-cfg
+    projected:
+      sources:
+      - secret:
+          name: regcred
+          items:
+          - key: .dockerconfigjson
+            path: config.json
 
   containers:
   - name: jnlp
@@ -36,18 +44,20 @@ spec:
     volumeMounts:
       - name: jenkins-docker-cfg
         mountPath: /kaniko/.docker
+
   - name: slscan
     image: shiftleft/sast-scan:v2.1.2
     imagePullPolicy: Always
     command:
       - cat
     tty: true
-  volumes:
-  - name: jenkins-docker-cfg
-    projected:
-      sources:
-      - secret:
-          name: regcred
-          items:
-          - key: .dockerconfigjson
-            path: config.json
+
+  - name: licensefinder
+    image: licensefinder/license_finder
+    imagePullPolicy: Always
+    command:
+      - cat
+    tty: true
+    volumeMounts:
+    - name: workspace-volume
+      mountPath: /home/jenkins/agent

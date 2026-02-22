@@ -18,7 +18,7 @@ pipeline {
                     steps {
                         container('maven') {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh 'mvn org.owasp:dependency-check-maven:check'
+                                sh 'mvn org.owasp:dependency-check-maven:check -DnvdApiKey=${NVD_API_KEY}'
                             }
                         }
                     }
@@ -49,9 +49,7 @@ pipeline {
                 stage('OSS License Checker') {
                     steps {
                         container('licensefinder') {
-                            sh 'ls -al'
                             sh '''#!/bin/bash --login
-                            /bin/bash --login
                             rvm use default
                             gem install license_finder
                             license_finder
